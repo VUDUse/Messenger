@@ -56,6 +56,7 @@ namespace Messenger
                         }
                         mainMenu.UpdateChatList(cr.RoomID);
                         mainMenu.RefreshChatList(); // Обновляем список чатов
+                        Window.GetWindow(this).Close();
 
                         return;
                     }
