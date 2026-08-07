@@ -1,20 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Messenger.DB
 {
     public class ChatRooms
     {
         [Key]
-        public string RoomID { get; set; }
-        public string Login { get; set; }
-        public string Password { get; set; }
+        public int Id { get; set; } // Раньше было RoomID (случайная строка) — теперь нормальный identity PK
+
+        public string Login { get; set; } // Название чата/группы
         public string? ChatHistory { get; set; }
         public string? LastMessage { get; set; }
+
+        // Password удалён: вступление в чат больше не защищается общим паролем.
+        // В следующей фазе для добавления в группу будет использоваться приглашение.
     }
 }

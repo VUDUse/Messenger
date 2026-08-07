@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 using Messenger.DB;
 
@@ -23,10 +13,10 @@ namespace Messenger
     /// </summary>
     public partial class ChatPage : Page
     {
-        private string roomId;
+        private int roomId;
         private DispatcherTimer chatUpdateTimer;
 
-        public ChatPage(string roomId, MainMenu mainMenu)
+        public ChatPage(int roomId, MainMenu mainMenu)
         {
             InitializeComponent();
             this.roomId = roomId;
@@ -43,7 +33,7 @@ namespace Messenger
             chatUpdateTimer.Start();
         }
 
-        private void MainMenu_ChatDeleted(string deletedRoomId)
+        private void MainMenu_ChatDeleted(int deletedRoomId)
         {
             if (deletedRoomId == roomId)
             {
@@ -79,7 +69,7 @@ namespace Messenger
 
             using (var db = new ApplicationContext())
             {
-                var chatRoom = db.ChatRooms.FirstOrDefault(cr => cr.RoomID == roomId);
+                var chatRoom = db.ChatRooms.FirstOrDefault(cr => cr.Id == roomId);
                 if (chatRoom != null)
                 {
                     if (chatRoom.ChatHistory == null)
@@ -106,22 +96,22 @@ namespace Messenger
             TextBlock messageBlock = new TextBlock
             {
                 Text = $"{user}: {message}",
-                TextWrapping = TextWrapping.Wrap,
+                TextWrapping = System.Windows.TextWrapping.Wrap,
                 FontSize = 16,
-                FontWeight = FontWeights.Bold,
+                FontWeight = System.Windows.FontWeights.Bold,
                 Foreground = Brushes.White,
-                Margin = new Thickness(0, 5, 0, 5)
+                Margin = new System.Windows.Thickness(0, 5, 0, 5)
             };
             ChatStackPanel.Children.Add(messageBlock); // Добавление сообщения в StackPanel
         }
 
         public void ChatUpdate()
         {
-            if (!string.IsNullOrEmpty(roomId) && !string.IsNullOrEmpty(DataBank.UserLog))
+            if (!string.IsNullOrEmpty(DataBank.UserLog))
             {
                 using (var db = new ApplicationContext())
                 {
-                    var chatRoom = db.ChatRooms.FirstOrDefault(cr => cr.RoomID == roomId);
+                    var chatRoom = db.ChatRooms.FirstOrDefault(cr => cr.Id == roomId);
                     if (chatRoom != null)
                     {
                         ChatStackPanel?.Children.Clear(); // Очищает текущие сообщения в StackPanel
@@ -148,12 +138,12 @@ namespace Messenger
             ChatScrollViewer?.ScrollToEnd(); // Прокрутка ScrollViewer к концу
         }
 
-        private void Message_TextChanged(object sender, TextChangedEventArgs e)
+        private void Message_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
 
         }
 
-        private void Enter_Click(object sender, RoutedEventArgs e)
+        private void Enter_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             SendMessage();
         }

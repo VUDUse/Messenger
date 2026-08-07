@@ -4,11 +4,11 @@
 
 ## Фаза 0 — Безопасность и гигиена репозитория (делать первой, без исключений)
 
-- [ ] `chore`: добавить `.gitignore` (bin/obj, appsettings.*.json с секретами, .vs)
-- [ ] `refactor`: вынести строку подключения к SQL Server из `ApplicationContext.cs` в `appsettings.json` / переменные окружения; закоммитить только `appsettings.Example.json` с заглушками
-- [ ] `feat`: хеширование паролей (BCrypt.Net-Next) для `Users.Password`; при логине сравнивать хеш, не строку
-- [ ] `feat`: то же самое для `ChatRooms.Password` (или убрать пароль у чатов вовсе — см. Фазу 2)
-- [ ] `refactor`: заменить `RoomID`/`Users.ID` со случайных строк на нормальные PK (`int identity` или `Guid`), подключить EF Core Migrations вместо `Database.EnsureCreated()`
+- [x] `chore`: добавить `.gitignore` (bin/obj, appsettings.*.json с секретами, .vs)
+- [x] `refactor`: вынести строку подключения к SQL Server из `ApplicationContext.cs` в `appsettings.json` / переменные окружения; закоммитить только `appsettings.Example.json` с заглушками
+- [x] `feat`: хеширование паролей (BCrypt.Net-Next) для `Users.Password`; при логине сравнивать хеш, не строку
+- [x] `feat`: то же самое для `ChatRooms.Password` (или убрать пароль у чатов вовсе — см. Фазу 2)
+- [x] `refactor`: заменить `RoomID`/`Users.ID` со случайных строк на нормальные PK (`int identity` или `Guid`), подключить EF Core Migrations вместо `Database.EnsureCreated()`
 
 ---
 

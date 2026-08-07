@@ -1,9 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Messenger.DB
 {
@@ -14,13 +11,27 @@ namespace Messenger.DB
 
         public ApplicationContext()
         {
-            //Database.EnsureDeleted();
-            Database.EnsureCreated();
+            // Схема БД теперь управляется через EF Core Migrations, а не через EnsureCreated():
+            //   dotnet ef migrations add <Название>
+            //   dotnet ef database update
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=ms-sql-10.in-solve.ru;Initial Catalog=1gb_mesenger;User ID=1gb_vudu;Password=z5c357c6uiw;Trust Server Certificate=True");
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(AppContext.BaseDirectory)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: false)
+                .Build();
+
+            string connectionString = configuration.GetConnectionString("DefaultConnection");
+
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new InvalidOperationException(
+                    "Строка подключения 'DefaultConnection' не найдена. Скопируй appsettings.Example.json в appsettings.json и заполни своими данными.");
+            }
+
+            optionsBuilder.UseSqlServer(connectionString);
         }
     }
 }

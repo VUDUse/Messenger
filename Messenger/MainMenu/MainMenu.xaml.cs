@@ -2,17 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Messenger
 {
@@ -21,11 +13,11 @@ namespace Messenger
     /// </summary>
     public partial class MainMenu : Window
     {
-        private Dictionary<string, string> chatLoginToRoomIdMap = new Dictionary<string, string>();
+        private Dictionary<string, int> chatLoginToRoomIdMap = new Dictionary<string, int>();
         private List<string> allChats = new List<string>(); // Список всех чатов
         private AuthService authService = new AuthService();
 
-        public event Action<string> ChatDeleted; // Событие для удаления чата
+        public event Action<int> ChatDeleted; // Событие для удаления чата
 
         public MainMenu()
         {
@@ -71,11 +63,11 @@ namespace Messenger
             settingsMenu.Show();
         }
 
-        public void UpdateChatList(string roomID)
+        public void UpdateChatList(int roomID)
         {
             using (var db = new ApplicationContext())
             {
-                var chatRoom = db.ChatRooms.FirstOrDefault(cr => cr.RoomID == roomID);
+                var chatRoom = db.ChatRooms.FirstOrDefault(cr => cr.Id == roomID);
 
                 if (chatRoom != null)
                 {
@@ -117,7 +109,7 @@ namespace Messenger
                     if (!allChats.Contains(chatItem))
                     {
                         allChats.Add(chatItem);
-                        chatLoginToRoomIdMap[chatItem] = chatRoom.RoomID; // Сохранение соответствия между логином и RoomID
+                        chatLoginToRoomIdMap[chatItem] = chatRoom.Id; // Сохранение соответствия между логином и RoomID
                     }
                 }
             }
@@ -146,7 +138,7 @@ namespace Messenger
             if (ChatListBox.SelectedItem != null)
             {
                 string selectedChat = ChatListBox.SelectedItem.ToString();
-                if (chatLoginToRoomIdMap.TryGetValue(selectedChat, out string roomId))
+                if (chatLoginToRoomIdMap.TryGetValue(selectedChat, out int roomId))
                 {
                     UserFrame.Navigate(new ChatPage(roomId, this));
                 }
@@ -172,7 +164,7 @@ namespace Messenger
             if (ChatListBox.SelectedItem != null)
             {
                 string selectedChat = ChatListBox.SelectedItem.ToString();
-                if (chatLoginToRoomIdMap.TryGetValue(selectedChat, out string roomId))
+                if (chatLoginToRoomIdMap.TryGetValue(selectedChat, out int roomId))
                 {
                     // Удаляем чат только из списка и словаря
                     chatLoginToRoomIdMap.Remove(selectedChat);

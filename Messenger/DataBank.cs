@@ -9,6 +9,6 @@ namespace Messenger
     static class DataBank
     {
         public static string UserLog;
-        public static string RoomID;
+        public static int? RoomID;
     }
 }

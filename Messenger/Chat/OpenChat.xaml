@@ -10,11 +10,9 @@
 
     <Grid>
         <TextBox x:Name="OpenChatLogin" Margin="40,160,40,0" Height="35" TextWrapping="Wrap" VerticalAlignment="Top"/>
-        <PasswordBox x:Name="OpenChatPassword" Height="35" Margin="40,230,40,0" VerticalAlignment="Top"/>
-        <Button x:Name="ChatOpen" Content="Join!" Margin="40,300,40,0" Height="40" VerticalAlignment="Top" Click="ChatOpen_Click"/>
-        <Button x:Name ="OpenCreateChat" Content="Or create a new chat?" HorizontalAlignment="Left" Margin="40,340,0,0" VerticalAlignment="Top" Background="Transparent" FontSize="12" Height="24" Foreground="#FFC54244" FontWeight="Normal" FontStretch="Expanded" Click="OpenCreateChat_Click" />
+        <Button x:Name="ChatOpen" Content="Join!" Margin="40,230,40,0" Height="40" VerticalAlignment="Top" Click="ChatOpen_Click"/>
+        <Button x:Name ="OpenCreateChat" Content="Or create a new chat?" HorizontalAlignment="Left" Margin="40,270,0,0" VerticalAlignment="Top" Background="Transparent" FontSize="12" Height="24" Foreground="#FFC54244" FontWeight="Normal" FontStretch="Expanded" Click="OpenCreateChat_Click" />
         <Label x:Name="Chat" Content="Chat" HorizontalAlignment="Left" Margin="35,130,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="Password" Content="Password" HorizontalAlignment="Left" Margin="35,200,0,0" VerticalAlignment="Top"/>
         <Button x:Name ="Back" Content="🠔" HorizontalAlignment="Left" Margin="0,0,0,0" VerticalAlignment="Top" Background="Transparent" FontSize="30" Height="43" Foreground="#FFC54244" FontWeight="Normal" FontStretch="Expanded" Width="25" Click="Back_Click"/>
 
         <Label Content="ViNik Developer Studio" HorizontalAlignment="Center" Margin="0,460,0,0" VerticalAlignment="Top" FontFamily="Dubai" FontSize="12" Foreground="#FF6E6873" FontWeight="Bold"/>

@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Messenger.DB;
 
 namespace Messenger
@@ -36,8 +26,11 @@ namespace Messenger
         {
             using (var db = new ApplicationContext())
             {
-                var user = db.Users.FirstOrDefault(u => u.Login == LoginSignIn.Text && u.Password == PasswordSignIn.Password);
-                if (user != null)
+                // Пароль хранится как хеш, поэтому сначала находим пользователя по логину,
+                // а затем сравниваем введённый пароль с хешем через BCrypt.Verify.
+                var user = db.Users.FirstOrDefault(u => u.Login == LoginSignIn.Text);
+
+                if (user != null && BCrypt.Net.BCrypt.Verify(PasswordSignIn.Password, user.Password))
                 {
                     DataBank.UserLog = user.Nickname;
 

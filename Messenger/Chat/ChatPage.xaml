@@ -18,5 +18,3 @@
         <Button Content="Enter" HorizontalAlignment="Left" Margin="513,415,0,0" VerticalAlignment="Top" Click="Enter_Click"/>
     </Grid>
 </Page>
-    
-    

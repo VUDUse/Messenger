@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Messenger.DB;
 
 namespace Messenger
@@ -35,40 +25,33 @@ namespace Messenger
         {
             using (var db = new ApplicationContext())
             {
-                var chatrooms = db.ChatRooms.ToList();
+                // Пароля у чатов больше нет. Пока вступление происходит по названию чата —
+                // это временное решение до внедрения приглашений (следующая фаза).
+                var chatRoom = db.ChatRooms.FirstOrDefault(cr => cr.Login == OpenChatLogin.Text);
 
-                foreach (var cr in chatrooms)
+                if (chatRoom != null)
                 {
-                    if (OpenChatLogin.Text == cr.Login && OpenChatPassword.Password == cr.Password)
+                    DataBank.RoomID = chatRoom.Id;
+
+                    OpenChatLogin.Text = null;
+
+                    MainMenu mainMenu = Application.Current.Windows.OfType<MainMenu>().FirstOrDefault();
+                    if (mainMenu == null)
                     {
-                        DataBank.RoomID = cr.RoomID;
-
-                        OpenChatLogin.Text = null;
-                        OpenChatPassword.Password = null;
-
-                        MainMenu mainMenu = Application.Current.Windows.OfType<MainMenu>().FirstOrDefault();
-                        if (mainMenu == null)
-                        {
-                            mainMenu = new MainMenu();
-                            mainMenu.Show();
-                            Application.Current.MainWindow.Close();
-                            Application.Current.MainWindow = mainMenu;
-                        }
-                        mainMenu.UpdateChatList(cr.RoomID);
-                        mainMenu.RefreshChatList(); // Обновляем список чатов
-                        Window.GetWindow(this).Close();
-
-                        return;
+                        mainMenu = new MainMenu();
+                        mainMenu.Show();
+                        Application.Current.MainWindow.Close();
+                        Application.Current.MainWindow = mainMenu;
                     }
+                    mainMenu.UpdateChatList(chatRoom.Id);
+                    mainMenu.RefreshChatList(); // Обновляем список чатов
+                    Window.GetWindow(this).Close();
+
+                    return;
                 }
 
-                Password.Content = "PASSWORD - wrong chat name or password";
-                Password.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#C22F1F");
-
-                Chat.Content = "CHAT NAME - wrong chat name or password";
+                Chat.Content = "CHAT NAME - chat not found";
                 Chat.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#C22F1F");
-
-                OpenChatPassword.Password = null;
             }
         }
 

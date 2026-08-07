@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Messenger.DB;
 
 namespace Messenger
@@ -65,14 +55,14 @@ namespace Messenger
                 succsess = false;
             }
 
-            // Проверка старого пароля
+            // Проверка старого пароля (сравнение с хешем через BCrypt.Verify)
             using (var db = new ApplicationContext())
             {
                 var user = db.Users.FirstOrDefault(u => DataBank.UserLog == u.Nickname);
 
                 if (user != null)
                 {
-                    if (OldPassword.Password != user.Password)
+                    if (!BCrypt.Net.BCrypt.Verify(OldPassword.Password, user.Password))
                     {
                         OldPass.Content = "OLD PASSWORD - Invalid password";
                         OldPass.Foreground = (SolidColorBrush)new BrushConverter().ConvertFromString("#C22F1F");
@@ -97,7 +87,7 @@ namespace Messenger
 
                     if (user != null)
                     {
-                        user.Password = NewPassword.Password;
+                        user.Password = BCrypt.Net.BCrypt.HashPassword(NewPassword.Password); // хешируем новый пароль
                         db.SaveChanges();   // сохраняем изменения
 
                         NavigationService.Navigate(new Settings());

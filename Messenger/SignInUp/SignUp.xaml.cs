@@ -1,19 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Channels;
-using System.Threading.Tasks;
+using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Net;
 using Messenger.DB;
 
 namespace Messenger
@@ -24,15 +14,6 @@ namespace Messenger
     public partial class SignUp : Page
     {
         private AuthService authService = new AuthService();
-
-        string UserID = null;
-
-        Random random = new Random();
-
-        int LevelID1 = 16;
-        int LevelID2 = 8;
-        int LevelID3 = 8;
-        int LevelID4 = 8;
 
         public static string host = Dns.GetHostName();
         public static IPAddress[] address = Dns.GetHostAddresses(host);
@@ -118,16 +99,14 @@ namespace Messenger
 
                 if (success)
                 {
-                    string UserID = GenerateUserID();
-
                     Users user = new Users
                     {
-                        ID = UserID,
+                        // Id назначается базой автоматически (identity PK)
                         Nickname = NicknameSignUp.Text,
                         Login = LoginSignUp.Text,
-                        Password = PasswordSignUp.Password,
+                        Password = BCrypt.Net.BCrypt.HashPassword(PasswordSignUp.Password), // хешируем пароль
                         IP = address[4].ToString(),
-                        AuthToken = UserID // Сохранение токена в поле AuthToken
+                        AuthToken = Guid.NewGuid().ToString() // отдельный случайный токен, не совпадает с Id
                     };
 
                     db.Users.Add(user);
@@ -139,7 +118,7 @@ namespace Messenger
                     NicknameSignUp.Text = null;
 
                     // Сохраняем токен в реестре
-                    authService.SaveToken(UserID);
+                    authService.SaveToken(user.AuthToken);
 
                     DataBank.UserLog = user.Nickname; // Сохраняем никнейм
 
@@ -149,35 +128,6 @@ namespace Messenger
                     Application.Current.MainWindow.Close();
                 }
             }
-        }
-
-        private string GenerateUserID()
-        {
-            Random random = new Random();
-            int LevelID1 = 4, LevelID2 = 4, LevelID3 = 4, LevelID4 = 4;
-
-            string UserID = string.Empty;
-            for (int i = 0; i < LevelID1; i++)
-            {
-                UserID += random.Next(0, 10);
-            }
-            UserID += "-";
-            for (int i = 0; i < LevelID2; i++)
-            {
-                UserID += random.Next(0, 10);
-            }
-            UserID += "-";
-            for (int i = 0; i < LevelID3; i++)
-            {
-                UserID += random.Next(0, 10);
-            }
-            UserID += "-";
-            for (int i = 0; i < LevelID4; i++)
-            {
-                UserID += random.Next(0, 10);
-            }
-
-            return UserID;
         }
     }
 }
